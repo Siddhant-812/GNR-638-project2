@@ -95,4 +95,24 @@ if is_blur:
             cv2.imwrite(str(new_image_name), blur_image)
         print(f"Val {c} blurred")
 
+# Create a CSV file
+num_train_blur_images = len(train_images_array) * 3
+num_val_blur_images = len(val_images_array) * 3
 
+train_info_df = pd.DataFrame(index=range(num_train_blur_images), columns=["blur", "sharp"])
+val_info_df = pd.DataFrame(index=range(num_val_blur_images), columns=["blur", "sharp"])
+
+for i, name in enumerate(pathlib.Path.iterdir(pathlib.Path(cwd, "train", "blur"))): 
+    train_info_df.iloc[i,0] = str(name)
+   
+    train_info_df.iloc[i,1] = str(pathlib.Path(
+        name.parent.parent, "sharp", "_".join(name.name.split("_")[2:])))
+ 
+for i, name in enumerate(pathlib.Path.iterdir(pathlib.Path(cwd, "val", "blur"))): 
+    val_info_df.iloc[i,0] = str(name)
+   
+    val_info_df.iloc[i,1] = str(pathlib.Path(
+        name.parent.parent, "sharp", "_".join(name.name.split("_")[2:])))
+    
+train_info_df.to_csv("train_info.csv")   
+val_info_df.to_csv("val_info.csv")  
