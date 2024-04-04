@@ -8,3 +8,12 @@ custom_test
 recon_image
 mp2_test.zip
 checkpoints
+report/*.DS_Store
+report/*.aux
+report/*.blg
+report/*.log
+report/*.out
+report/*.run.xml
+report/*.gz
+report/*blx.bib
+report.zip
