@@ -114,3 +114,20 @@ for i, name in enumerate(pathlib.Path.iterdir(pathlib.Path(cwd, "val", "blur")))
     
 train_info_df.to_csv("train_info.csv")   
 val_info_df.to_csv("val_info.csv")  
+
+# Create test images csv file
+test_images_array = []
+for i in pathlib.Path.iterdir(pathlib.Path(cwd, "custom_test", "blur")):
+    test_images_array.append(i)
+test_images_array = np.array(test_images_array)
+
+num_test_blur_images = len(test_images_array)
+
+test_info_df = pd.DataFrame(index=range(num_test_blur_images), columns=["blur", "sharp"])
+
+for i, name in enumerate(test_images_array): 
+    test_info_df.iloc[i,0] = str(name)
+   
+    test_info_df.iloc[i,1] = str(pathlib.Path(name.parent.parent, "sharp", name.name))
+  
+test_info_df.to_csv("csv_inputs/test_info.csv")

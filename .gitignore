@@ -2,6 +2,9 @@ images
 train
 val
 train_sharp.zip
-checkpoints
 __pycache__
 .vscode
+custom_test
+recon_image
+mp2_test.zip
+checkpoints

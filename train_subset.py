@@ -11,6 +11,7 @@ import pandas as pd
 from Stripformer_arch import Stripformer
 from skimage.metrics import peak_signal_noise_ratio
 from tqdm import tqdm
+from loss_function import Stripformer_Loss
 
 #%% Set the device
 if torch.cuda.is_available():
@@ -27,7 +28,7 @@ device = torch.device(device_type)
 BATCH_SIZE = 16
 
 transforms = torchvision.transforms.Compose([
-        torchvision.transforms.Resize((448, 256))
+        torchvision.transforms.Resize((256, 448))
     ])
 
 train_ds = BlurDataset(csv_path="/raid/speech/soumen/gnr_project/csv_inputs/train_info.csv", transforms=transforms)
@@ -44,16 +45,17 @@ torchinfo.summary(model, (BATCH_SIZE, 3, 256, 448))
 
 #%% Compile the model
 optimizer = torch.optim.Adam(params=model.parameters(), lr=0.00001, betas=(0.9, 0.999), weight_decay=0)
-loss_fn = torch.nn.L1Loss(reduction="mean")
-    
+# loss_fn = torch.nn.L1Loss(reduction="mean")
+loss_fn = Stripformer_Loss()
+
 #%% Create the training loop
 t1 = time.time()
-epoch = 10
+epoch = 20
 loss_list = []
 psnr_list = []
 val_loss_list_total = []
 val_psnr_list_total = []
-NUM_TRAIN_BATCH_PER_EPOCH = 20
+NUM_TRAIN_BATCH_PER_EPOCH = 100
 NUM_VAL_BATCH_PER_EPOCH = 10
 
 for ep in range(epoch):
@@ -65,10 +67,10 @@ for ep in range(epoch):
     subset_train_ds = torch.utils.data.Subset(train_dl.dataset, train_subset_indices.numpy().tolist())
     subset_train_dl = torch.utils.data.DataLoader(subset_train_ds, batch_size=BATCH_SIZE, shuffle=True, drop_last=True)
 
-    for i, (blur_x, sharp_y) in enumerate(subset_train_dl):
+    for i, (blur_x, sharp_y, _, _) in enumerate(subset_train_dl):
         blur_x, sharp_y = blur_x.to(device=device), sharp_y.to(device=device)
         pred_sharp_y = model(blur_x.to(torch.float32))
-        loss = loss_fn(pred_sharp_y, sharp_y)
+        loss = loss_fn(pred_sharp_y, sharp_y, blur_x)
 
         loss.backward()
         optimizer.step()
@@ -95,11 +97,11 @@ for ep in range(epoch):
     val_psnr_list = []
     val_progress_bar = tqdm(total=NUM_VAL_BATCH_PER_EPOCH)
     
-    for j, (val_blur_x, val_sharp_y) in enumerate(subset_val_dl):
+    for j, (val_blur_x, val_sharp_y, _, _) in enumerate(subset_val_dl):
         val_blur_x, val_sharp_y = val_blur_x.to(device=device), val_sharp_y.to(device=device)
         val_pred_sharp_y = model(val_blur_x.to(torch.float32))
         
-        val_loss = loss_fn(val_pred_sharp_y, val_sharp_y)
+        val_loss = loss_fn(val_pred_sharp_y, val_sharp_y, val_blur_x)
         val_loss_list.append(val_loss.item())
         val_psnr = peak_signal_noise_ratio(val_sharp_y.cpu().detach().numpy(), 
                                         val_pred_sharp_y.cpu().detach().numpy())

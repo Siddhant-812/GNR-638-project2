@@ -61,9 +61,9 @@ class BlurDataset(torch.utils.data.Dataset):
         orig_sharp_image = BlurDataset.transform_features(orig_sharp_image)
 
         if is_transform:
-            return blur_image, sharp_image
+            return blur_image, sharp_image, blur_image_name, sharp_image_name
         else:
-            return orig_blur_image, orig_sharp_image
+            return orig_blur_image, orig_sharp_image, blur_image_name, sharp_image_name
 
     def display_sample(
         self
