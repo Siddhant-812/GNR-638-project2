@@ -6,7 +6,7 @@ import cv2
 
 # Get all the images path
 cwd = pathlib.Path.cwd()
-is_structure = False
+is_structure = True
 
 if is_structure:
     images_array = []
@@ -31,7 +31,7 @@ if is_structure:
     val_images_array = images_array[int(num_images*0.8):]
 
     # Create train validation folders
-    is_new_dir = False
+    is_new_dir = True
     if is_new_dir:
         pathlib.Path.mkdir(pathlib.Path(cwd, "train", "sharp"), parents=True, exist_ok=False)
         pathlib.Path.mkdir(pathlib.Path(cwd, "train", "blur"), parents=True, exist_ok=False)
@@ -48,14 +48,12 @@ if is_structure:
 # Resize the train and val images
 train_images_array = []
 for i in pathlib.Path.iterdir(pathlib.Path(cwd, "train", "sharp")):
-    if "resize" in i.name: 
-        train_images_array.append(i)
+    train_images_array.append(i)
 train_images_array = np.array(train_images_array)
 
 val_images_array = []
 for i in pathlib.Path.iterdir(pathlib.Path(cwd, "val", "sharp")):
-    if "resize" in i.name: 
-        val_images_array.append(i)
+    val_images_array.append(i)
 val_images_array = np.array(val_images_array)
 
 is_resize = False
@@ -76,7 +74,7 @@ if is_resize:
         print(f"Val {c} resized")
 
 # Blur the images
-is_blur = False
+is_blur = True
 
 if is_blur:
     for c,i in enumerate(train_images_array):

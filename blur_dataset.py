@@ -32,6 +32,7 @@ class BlurDataset(torch.utils.data.Dataset):
 
         x = torchvision.transforms.PILToTensor()(data_x)
         x = x.to(dtype=torch.float32)
+        x = x/255.0
 
         return x
 
