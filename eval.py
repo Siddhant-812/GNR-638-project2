@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Mon April 1 11:57:46 2024
+
+@author: soumensmacbookair
+"""
+
 import os
 from skimage.metrics import peak_signal_noise_ratio
 from skimage.io import imread
