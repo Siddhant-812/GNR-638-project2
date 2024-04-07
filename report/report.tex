@@ -106,63 +106,73 @@
 		
 	\section{Results}
 		\subsection{Training Process}
-			The training process of Stripformer involved monitoring both the training loss and PSNR over epochs to assess the model's convergence and performance. Figure \ref{F:train} and \ref{F:val} illustrates the training and validation curves plotted against the number of optimizer steps. As shown in the figure, both the training loss and PSNR demonstrate a decreasing trend over epochs, indicating that the model is learning from the training data and improving its performance.
+			The training process of Stripformer involved monitoring both the training loss and PSNR over epochs to assess the model's convergence and performance. Figure \ref{F:train} and \ref{F:val} illustrates the training and validation curves plotted against the number of optimizer steps. As shown in the figure, both the training loss and PSNR demonstrate a decreasing trend over epochs, indicating that the model is learning from the training data and improving its performance. We have trained the model for 10 epochs.
 			\\
 			\\
 			The training loss steadily decreases, while the training PSNR gradually increases, suggesting that the model is effectively minimizing its prediction errors and learning to reconstruct or deblur the blurred images more accurately. Additionally, the convergence of both loss and PSNR curves indicates that the model is stable and not overfitting to the training data. See Table \ref{T:train} for training details.
 			
 			\begin{figure}[hbt!]
 				\centering
-				\includegraphics[width=0.8\textwidth]{train.png}
+				\includegraphics[width=\textwidth]{train.png}
 				\caption{Training Loss and PSNR Curves of Stripformer for 10 epochs.}
 				\label{F:train}
 			\end{figure}
 			
 			\begin{figure}[hbt!]
 				\centering
-				\includegraphics[width=0.8\textwidth]{val.png}
+				\includegraphics[width=\textwidth]{val.png}
 				\caption{Validation Loss and PSNR Curves of Stripformer for 10 epochs.}
 				\label{F:val}
 			\end{figure}
 		
 		\subsection{Performance Evaluation}
-			After training, the performance of Stripformer was evaluated on the test set to assess its PSNR in reconstructing unseen blurred data. The final test PSNR achieved on the test set was \textbf{24.02 dB}, indicating that the model generalizes decently to new examples. The value of test PSNR could be attributed due to that fact that the test set could have been taken from a different blurring distribution.
-			\\
-			\\	
+			After training, the performance of Stripformer is evaluated on the test set to assess its PSNR in reconstructing unseen blurred data. The final test PSNR achieved on the test set is \textbf{28.48 dB}, indicating that the model generalizes decently to new examples. The value of test PSNR could be attributed due to that fact that the test set could have been taken from a different blurring distribution. See Figure \ref{F:test} to see the reconstruction quality of the test image.
+			
+			\begin{figure}[hbt!]
+				\centering
+				\includegraphics[width=\textwidth]{test1.png}
+				\caption{Reconstruction quality of the test image. The Stripformer model is able to successfully deblur the blurred image.}
+				\label{F:test}
+			\end{figure}
+			
 			Overall, the results of the training process and performance evaluation highlight the success of Stripformer in achieving high PSNR while maintaining parameter efficiency, making it a suitable choice for various computer vision tasks. See Table \ref{T:test} for testing details.
 			
-			\begin{table}
+			\begin{table}[hbt!]
 				\begin{center}
 					\begin{tabular}{c c c c c c}
 						\hline
 						\textbf{Model Name}& \textbf{\# of Parameters} & \textbf{Train Loss} & \textbf{Train PSNR} & \textbf{Val Loss} & \textbf{Val PSNR} \\ \hline
-						Stripformer & $3.32$ Million & $0.012$ & $35.43$ dB & $0.017$ & $36.41$ dB \\ \hline
+						Stripformer & $3.32$ Million & $0.0155$ & $33.43$ dB & $0.0162$ & $32.97$ dB \\ \hline
 					\end{tabular}
 					\caption{Deblurring Results on Train and Validation Set for Best Epoch \#9}\label{T:train}
 				\end{center}
 			\end{table}
 			
-			\begin{table}
+			\begin{table}[hbt!]
 				\begin{center}
 						\begin{tabular}{c c c c}
 								\hline
 								\textbf{Model Name} & \textbf{\# of Parameters} & \textbf{Test Loss} & \textbf{Test PSNR} \\ \hline
-								Stripformer & $3.32$ Million & $0.021$ & $24.02$ dB \\ \hline
+								Stripformer & $3.32$ Million & $0.0193$ & $28.48$ dB \\ \hline
 							\end{tabular}
 						\caption{Deblurring Results on Test Set}\label{T:test}
 					\end{center}
 			\end{table}
 			
 		\subsection{Relevant Links of Results}
-			The following links provide access to various resources related to the results of our experiments:
+			The following links provide access to various resources related to the results of our experiments. We have kept all of our codes in GitHub.
 			
 			\begin{itemize}
 				\item \textbf{Best Model Checkpoint:} The checkpoint file for best performing model can be accessed on \url{https://github.com/soumenkm/GNR-638-miniproject2/blob/main/outputs/model_best_epoch.pth}
 				
 				\item \textbf{Code:} The Python files for training, validation, testing and plotting can be found on \url{https://github.com/soumenkm/GNR-638-miniproject2/tree/main}
+			\end{itemize}
 				
+		\subsection{Explanation of Codes}
+		We have used multiple Python files to simplify the training and testing processes. The functionality of each of the Python files available in the main GitHub repository is explained below:
+		
 				\begin{itemize}
-					\item data\_preprocess.py: Contains functions for preprocessing data, such as resizing images or performing data augmentation, before training the model.
+					\item data\_preprocess.py: Contains functions for preprocessing data, such as resizing images, applying Gaussian blur etc before training the model.
 					
 					\item blur\_dataset.py:
 					Defines the BlurDataset class used for loading and preprocessing blur images and their corresponding sharp images for training or evaluation.
@@ -172,17 +182,15 @@
 					
 					\item loss\_function.py: Defines custom loss functions used during the training of the Stripformer model, such as Charbonnier loss, edge loss, and contrastive loss.
 					
-					\item train\_subset.py: Contains functions or scripts for training the Stripformer model on a subset of the training data, useful for debugging or experimentation purposes.
+					\item train.py: Contains functions or scripts for training the Stripformer model on a subset of the training data, useful for debugging or experimentation purposes.
 					
-					\item plot\_train\_details.py: Contains functions or scripts for plotting and visualizing the training details, such as loss curves, PSNR values, etc., during or after training.			
+					\item plot\_results.py: Contains functions or scripts for plotting and visualizing the training details, such as loss curves, PSNR values, etc., during or after training and plotting sharp, blur and deblur images.			
 					
-					\item test.py: Includes functions or scripts for testing the functionality of the model for test set.
+					\item test.py: Includes functions or scripts for testing the functionality of the model for test set. It will load the model checkpoint and infer on the test set
 					
 					\item eval.py: Includes functions or scripts for evaluating the performance of the trained model on a separate test dataset, calculating metrics like PSNR.
 					
 				\end{itemize}
-
-			\end{itemize}
 
 	\section{Conclusion}
 		In conclusion, the experimentation with Stripformer for the deblurring task yielded promising results. Through rigorous training and evaluation, the model showcased commendable performance in both convergence during training and PSNR on the train set. The decreasing trend observed in both training loss and increasing trend in PSNR over epochs indicate effective learning without overfitting, corroborated by the stable convergence of loss and PSNR curves.
