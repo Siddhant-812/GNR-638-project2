@@ -390,8 +390,9 @@ class Stripformer(nn.Module):
         hx = self.Trans_block_11(hx)
         hx = self.Trans_block_12(hx)
         hx = self.decoder(hx, residual_1, residual_2)
-
-        return hx + x
+        hx = hx + x
+        hx = torch.nn.Sigmoid()(hx)
+        return hx
 
 if __name__ == "__main__":
     

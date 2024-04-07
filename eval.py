@@ -8,7 +8,7 @@ def psnr_between_folders(folder1, folder2):
     # Get list of filenames in folder1
     filenames = os.listdir(folder1)
     
-    for i, filename in enumerate(filenames):
+    for filename in filenames:
         if filename.endswith(".jpg") or filename.endswith(".png"):
             # Read corresponding images from both folders
             img_path1 = os.path.join(folder1, filename)
@@ -17,10 +17,8 @@ def psnr_between_folders(folder1, folder2):
             img2 = imread(img_path2)
             
             # Compute PSNR between corresponding images
-            print(img1.shape, img2.shape)
             psnr = peak_signal_noise_ratio(img1, img2)
             psnr_values.append(psnr)
-            print(f"File {i} done")
     
     # Compute average PSNR across all images
     avg_psnr = sum(psnr_values) / len(psnr_values)
@@ -31,7 +29,7 @@ def psnr_between_folders(folder1, folder2):
 
 # Example usage:
 folder1 = "custom_test/sharp/"
-folder2 = "recon_image/"
+folder2 = "recon_image_test/"
 
 avg_psnr = psnr_between_folders(folder1, folder2)
 print(f"Average PSNR between corresponding images: {avg_psnr} dB")

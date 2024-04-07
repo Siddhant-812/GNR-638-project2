@@ -17,3 +17,4 @@ report/*.run.xml
 report/*.gz
 report/*blx.bib
 report.zip
+report/*.bbl
